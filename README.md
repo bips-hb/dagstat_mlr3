@@ -1,6 +1,8 @@
 # Introduction to Machine Learning with R and mlr3
 DAGStat 2025, Berlin
 
+Bernd Bischl, Marvin N. Wright
+
 ## Schedule 
 ### Morning Session 1
 * Theory: Machine Learning Basics [Slides (pdf)](https://bips-hb.github.io/dagstat_mlr3/slides/theory_1.pdf)
