@@ -43,7 +43,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -191,10 +191,10 @@ Overview</a></li>
 </ul></li>
 <li><a href="#exercises" id="toc-exercises">Exercises:</a>
 <ul>
-<li><a href="#split-data-in-training-and-test-data" id="toc-split-data-in-training-and-test-data">Split Data in Training and
-Test Data</a></li>
 <li><a href="#create-a-classification-task" id="toc-create-a-classification-task">Create a Classification
 Task</a></li>
+<li><a href="#split-data-in-training-and-test-data" id="toc-split-data-in-training-and-test-data">Split Data in Training and
+Test Data</a></li>
 <li><a href="#train-a-model-on-the-training-dataset" id="toc-train-a-model-on-the-training-dataset">Train a Model on the
 Training Dataset</a></li>
 <li><a href="#inspect-the-model" id="toc-inspect-the-model">Inspect the
@@ -583,81 +583,6 @@ five components:</p>
 <li>The prediction via <code>$predict()</code>.</li>
 <li>The evaluation via one <code>$score()</code>.</li>
 </ul>
-<div id="split-data-in-training-and-test-data" class="section level2">
-<h2>Split Data in Training and Test Data</h2>
-<p>Your task is to split the <code>german</code> dataset into 70 %
-training data and 30 % test data by randomly sampling rows. Later, we
-will use the training data to learn an ML model and use the test data to
-assess its performance.</p>
-<details>
-<summary>
-Recap: Why do we need train and test data?
-</summary>
-<p>We use part of the available data (the training data) to train our
-model. The remaining/hold-out data (test data) is used to evaluate the
-trained model. This is exactly how we anticipate using the model in
-practice: We want to fit the model to existing data and then make
-predictions on new, unseen data points for which we do not know the
-outcome/target values.</p>
-<p>Note: Hold-out splitting requires a dataset that is sufficiently
-large such that both the training and test dataset are suitable
-representations of the target population. What “sufficiently large”
-means depends on the dataset at hand and the complexity of the
-problem.</p>
-<p>The ratio of training to test data is also context dependent. In
-practice, a 70% to 30% (~ 2:1) ratio is a good starting point.</p>
-</details>
-<details>
-<summary>
-<strong>Hint 1:</strong>
-</summary>
-<p>Use <code>sample()</code> to sample 70 % of the data ids as training
-data ids from <code>row.names(german)</code>. The remaining row ids are
-obtained via <code>setdiff()</code>. Based on the ids, set up two
-datasets, one for training and one for testing/evaluating.</p>
-<p>Set a seed (e.g, <code>set.seed(100L)</code>) to make your results
-reproducible.</p>
-</details>
-<details>
-<summary>
-<strong>Hint 2:</strong>
-</summary>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Sample ids for training and test split</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span><span class="dt">L</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>train_ids <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">row.names</span>(german), <span class="fl">0.7</span><span class="sc">*</span><span class="fu">nrow</span>(...))</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>test_ids <span class="ot">=</span> <span class="fu">setdiff</span>(..., train_ids)</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Create two datasets based on ids</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>train_set <span class="ot">=</span> german[...,]</span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>test_set <span class="ot">=</span> german[...,]</span></code></pre></div>
-</details>
-<!--
-
-### Solution:
-<details>
-<summary>Click me:</summary>
-
-We first sample row ids by using `sample()` and identify the non-selected rows via `setdiff()`.
-
-``` r
-set.seed(100L)
-train_ids = sample(row.names(german), 0.7*nrow(german))
-test_ids = setdiff(row.names(german), train_ids)
-str(train_ids)
-##  chr [1:700] "714" "503" "358" "624" "985" "718" "919" "470" "966" "516" "823" "838" "98" "903" "7" "183" ...
-str(test_ids)
-##  chr [1:300] "3" "5" "8" "17" "20" "22" "25" "29" "33" "35" "39" "40" "41" "43" "44" "49" "52" "57" "58" ...
-```
-
-Based on that, we create two datasets: one for training and one for testing.
-
-``` r
-train_set = german[train_ids,]
-test_set = german[test_ids, ]
-```
-
--->
-</div>
 <div id="create-a-classification-task" class="section level2">
 <h2>Create a Classification Task</h2>
 <p>Install and load the <code>mlr3verse</code> package which is a
@@ -684,8 +609,8 @@ task.</p>
 <summary>
 <strong>Hint 2:</strong>
 </summary>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(mlr3verse)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>task <span class="ot">=</span> <span class="fu">as_task_classif</span>(<span class="at">x =</span> ..., <span class="at">target =</span> ..., <span class="at">... =</span> <span class="st">&quot;good&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(mlr3verse)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>task <span class="ot">=</span> <span class="fu">as_task_classif</span>(<span class="at">x =</span> ..., <span class="at">target =</span> ..., <span class="at">... =</span> <span class="st">&quot;good&quot;</span>)</span></code></pre></div>
 </details>
 <!--
 
@@ -698,10 +623,10 @@ To initialize a `TaskClassif` object, two equivalent calls exist:
 
 ``` r
 library("mlr3verse")
-task = TaskClassif$new("german_credit", backend = train_set, target = "credit_risk", positive = "good")
-task = as_task_classif(train_set, target = "credit_risk", positive = "good")
+task = TaskClassif$new("german_credit", backend = german, target = "credit_risk", positive = "good")
+task = as_task_classif(german, target = "credit_risk", positive = "good")
 task
-## <TaskClassif:train_set> (700 x 21)
+## <TaskClassif:german> (1000 x 21)
 ## * Target: credit_risk
 ## * Properties: twoclass
 ## * Features (20):
@@ -710,6 +635,123 @@ task
 ##     status, telephone
 ##   - int (3): age, amount, duration
 ##   - ord (3): installment_rate, number_credits, present_residence
+```
+
+Alternatively, we can directly use the task included in mlr3:
+
+
+``` r
+library("mlr3verse")
+task = tsk("german_credit")
+```
+
+
+-->
+</div>
+<div id="split-data-in-training-and-test-data" class="section level2">
+<h2>Split Data in Training and Test Data</h2>
+<p>Your task is to split the dataset into 70 % training data and 30 %
+test data by randomly sampling rows. Later, we will use the training
+data to learn an ML model and use the test data to assess its
+performance.</p>
+<details>
+<summary>
+Recap: Why do we need train and test data?
+</summary>
+<p>We use part of the available data (the training data) to train our
+model. The remaining/hold-out data (test data) is used to evaluate the
+trained model. This is exactly how we anticipate using the model in
+practice: We want to fit the model to existing data and then make
+predictions on new, unseen data points for which we do not know the
+outcome/target values.</p>
+<p>Note: Hold-out splitting requires a dataset that is sufficiently
+large such that both the training and test dataset are suitable
+representations of the target population. What “sufficiently large”
+means depends on the dataset at hand and the complexity of the
+problem.</p>
+<p>The ratio of training to test data is also context dependent. In
+practice, a 70% to 30% (~ 2:1) ratio is a good starting point.</p>
+</details>
+<details>
+<summary>
+<strong>Hint 1:</strong>
+</summary>
+<p>Use <code>partition()</code> on the task to create a train index and
+a test index.</p>
+<p>Set a seed (e.g, <code>set.seed(100L)</code>) to make your results
+reproducible.</p>
+</details>
+<details>
+<summary>
+<strong>Hint 2:</strong>
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Sample ids for training and test split</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span><span class="dt">L</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>splits <span class="ot">=</span> <span class="fu">partition</span>(...)</span></code></pre></div>
+</details>
+<!--
+
+### Solution:
+<details>
+<summary>Click me:</summary>
+
+We sample row ids by using `partition()`.
+
+``` r
+set.seed(100L)
+splits = partition(task)
+splits
+## $train
+##   [1]    1    2    4    6    7    9   10   11   12   13   14   15   16   18   19   21   23   24   26   27   28
+##  [22]   31   32   34   36   37   38   42   45   46   47   48   53   54   55   56   60   61   64   65   66   67
+##  [43]   68   71   72   76   77   78   79   82   83   84   85   86   87   88   90   91   92   93   94   95   96
+##  [64]   98  100  102  104  107  108  111  112  114  115  116  117  118  119  120  121  124  125  128  129  130
+##  [85]  131  133  134  135  136  137  138  140  142  144  145  146  147  150  153  154  155  156  157  158  161
+## [106]  163  165  166  167  168  169  170  171  173  174  175  177  183  184  185  187  192  193  194  197  198
+## [127]  201  202  203  205  206  209  210  213  214  218  220  221  222  223  224  227  228  229  232  233  237
+## [148]  239  240  241  242  243  244  246  247  248  249  250  251  254  255  256  258  259  261  262  263  264
+## [169]  267  268  269  270  272  273  274  276  277  278  280  281  282  283  284  286  287  288  289  290  291
+## [190]  292  293  296  297  298  299  300  301  302  303  304  305  306  307  308  309  310  313  314  316  318
+## [211]  321  322  323  324  325  326  327  328  329  330  332  334  335  336  337  338  339  340  341  342  345
+## [232]  346  347  349  350  351  353  354  355  358  359  362  363  364  366  367  370  371  372  374  376  377
+## [253]  378  379  380  383  385  387  389  390  392  393  394  395  396  397  400  401  402  403  404  405  406
+## [274]  410  411  415  417  420  421  422  423  424  425  426  427  428  429  430  431  435  436  437  439  442
+## [295]  444  447  448  449  450  456  457  458  459  461  462  463  464  465  466  467  469  470  471  473  474
+## [316]  476  477  478  479  480  481  482  483  486  487  488  489  490  491  492  493  494  495  496  497  500
+## [337]  502  503  504  505  506  507  509  510  514  515  516  518  519  520  521  523  525  526  528  530  532
+## [358]  533  536  537  538  541  543  544  546  548  549  550  551  552  553  554  555  556  557  558  559  560
+## [379]  564  567  568  570  572  573  576  577  580  584  585  587  590  592  593  594  596  597  598  599  600
+## [400]  605  606  607  609  611  613  614  615  616  618  619  623  624  625  627  628  630  631  632  633  634
+## [421]  636  637  639  640  641  642  643  644  646  648  650  651  652  653  655  656  658  659  660  661  662
+## [442]  663  666  668  669  670  671  675  679  682  683  685  689  690  692  693  694  695  696  697  699  702
+## [463]  703  704  705  706  708  709  710  711  713  714  715  716  717  718  719  720  721  722  723  728  729
+## [484]  730  731  732  733  734  735  737  738  739  742  745  746  747  749  753  755  756  757  758  759  760
+## [505]  761  762  766  768  769  770  771  772  773  775  778  779  780  784  785  787  789  790  791  792  793
+## [526]  794  795  796  797  799  800  801  803  805  806  807  809  811  813  814  816  817  818  819  822  823
+## [547]  825  826  829  831  832  834  835  836  838  839  841  842  843  844  846  847  848  849  851  852  853
+## [568]  856  857  858  859  861  862  863  864  865  866  867  868  869  871  873  877  878  881  882  883  885
+## [589]  888  889  891  892  893  894  895  897  898  899  900  901  902  903  905  908  910  911  914  915  916
+## [610]  917  918  919  920  923  924  925  926  927  928  931  932  934  935  936  938  939  940  942  943  944
+## [631]  945  946  947  948  949  950  951  952  953  954  955  956  957  958  960  966  967  968  969  970  971
+## [652]  972  973  975  976  977  978  981  982  983  985  988  989  990  991  993  994  996  998 1000
+## 
+## $test
+##   [1]   3   5   8  17  20  22  25  29  30  33  35  39  40  41  43  44  49  50  51  52  57  58  59  62  63  69
+##  [27]  70  73  74  75  80  81  89  97  99 101 103 105 106 109 110 113 122 123 126 127 132 139 141 143 148 149
+##  [53] 151 152 159 160 162 164 172 176 178 179 180 181 182 186 188 189 190 191 195 196 199 200 204 207 208 211
+##  [79] 212 215 216 217 219 225 226 230 231 234 235 236 238 245 252 253 257 260 265 266 271 275 279 285 294 295
+## [105] 311 312 315 317 319 320 331 333 343 344 348 352 356 357 360 361 365 368 369 373 375 381 382 384 386 388
+## [131] 391 398 399 407 408 409 412 413 414 416 418 419 432 433 434 438 440 441 443 445 446 451 452 453 454 455
+## [157] 460 468 472 475 484 485 498 499 501 508 511 512 513 517 522 524 527 529 531 534 535 539 540 542 545 547
+## [183] 561 562 563 565 566 569 571 574 575 578 579 581 582 583 586 588 589 591 595 601 602 603 604 608 610 612
+## [209] 617 620 621 622 626 629 635 638 645 647 649 654 657 664 665 667 672 673 674 676 677 678 680 681 684 686
+## [235] 687 688 691 698 700 701 707 712 724 725 726 727 736 740 741 743 744 748 750 751 752 754 763 764 765 767
+## [261] 774 776 777 781 782 783 786 788 798 802 804 808 810 812 815 820 821 824 827 828 830 833 837 840 845 850
+## [287] 854 855 860 870 872 874 875 876 879 880 884 886 887 890 896 904 906 907 909 912 913 921 922 929 930 933
+## [313] 937 941 959 961 962 963 964 965 974 979 980 984 986 987 992 995 997 999
+## 
+## $validation
+## integer(0)
 ```
 
 -->
@@ -723,7 +765,7 @@ learning method. We start with a simple classifier: a logistic
 regression model. During this course, you will, of course, also gain
 experience with more complex models.</p>
 <p>Fit a logistic regression model to the <code>german_credit</code>
-training task.</p>
+task using only the training data.</p>
 <details>
 <summary>
 <strong>Hint 1:</strong>
@@ -740,7 +782,7 @@ input.</p>
 <strong>Hint 2:</strong>
 </summary>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>logreg <span class="ot">=</span> <span class="fu">lrn</span>(<span class="st">&quot;classif.log_reg&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>logreg<span class="sc">$</span><span class="fu">train</span>(...)</span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>logreg<span class="sc">$</span><span class="fu">train</span>(..., <span class="at">row_ids =</span> ...)</span></code></pre></div>
 </details>
 <!--
 
@@ -749,13 +791,14 @@ input.</p>
 <summary>Click me:</summary>
 
 By using the syntactic sugar method `lrn()`, we first initialize a `LearnerClassif` model.
-Using the `$train()` method, we derive optimal hyperparameters (i.e., coefficients)
+Using the `$train()` method, we derive optimal parameters (i.e., coefficients)
 for our logistic regression model.
+With `row_ids = splits$train`, we specify that only the training data should be used.
 
 
 ``` r
 logreg = lrn("classif.log_reg")
-logreg$train(task)
+logreg$train(task, row_ids = splits$train)
 ```
 
 -->
@@ -794,76 +837,76 @@ of the coefficients (including p-values) using `summary()`.
 summary(logreg$model)
 ## 
 ## Call:
-## stats::glm(formula = task$formula(), family = "binomial", data = data, 
+## stats::glm(formula = form, family = "binomial", data = data, 
 ##     model = FALSE)
 ## 
 ## Coefficients:
-##                                                             Estimate Std. Error z value      Pr(>|z|)    
-## (Intercept)                                               -2.3422817  1.4015314   -1.67       0.09468 .  
-## age                                                        0.0199896  0.0115354    1.73       0.08312 .  
-## amount                                                    -0.0000441  0.0000541   -0.82       0.41490    
-## credit_historycritical account/other credits elsewhere    -0.2266843  0.7108955   -0.32       0.74982    
-## credit_historyno credits taken/all credits paid back duly  0.8517399  0.5311099    1.60       0.10878    
-## credit_historyexisting credits paid back duly till now     1.2779011  0.5798893    2.20       0.02755 *  
-## credit_historyall credits at this bank paid back duly      1.4435076  0.5311073    2.72       0.00657 ** 
-## duration                                                  -0.0367412  0.0112429   -3.27       0.00108 ** 
-## employment_duration< 1 yr                                 -0.5908943  0.5534711   -1.07       0.28569    
-## employment_duration1 <= ... < 4 yrs                       -0.1409680  0.5196523   -0.27       0.78618    
-## employment_duration4 <= ... < 7 yrs                        0.2574552  0.5676126    0.45       0.65013    
-## employment_duration>= 7 yrs                               -0.2025753  0.5284133   -0.38       0.70145    
-## foreign_workerno                                          -1.2976957  0.7418275   -1.75       0.08024 .  
-## housingrent                                                0.2712171  0.2799944    0.97       0.33272    
-## housingown                                                 0.3154187  0.6180075    0.51       0.60979    
-## installment_rate.L                                        -0.5017597  0.2644548   -1.90       0.05778 .  
-## installment_rate.Q                                        -0.3089248  0.2409902   -1.28       0.19988    
-## installment_rate.C                                         0.0827390  0.2495547    0.33       0.74023    
-## jobunskilled - resident                                    0.6928615  0.8182377    0.85       0.39712    
-## jobskilled employee/official                               0.7769424  0.7895919    0.98       0.32513    
-## jobmanager/self-empl./highly qualif. employee              0.7128829  0.7922905    0.90       0.36824    
-## number_credits.L                                          -0.1357529  0.7660844   -0.18       0.85935    
-## number_credits.Q                                           0.0659531  0.6394695    0.10       0.91785    
-## number_credits.C                                           0.0748280  0.4877474    0.15       0.87807    
-## other_debtorsco-applicant                                  0.2186207  0.5265924    0.42       0.67802    
-## other_debtorsguarantor                                     0.7833886  0.4968495    1.58       0.11486    
-## other_installment_plansstores                              0.1454238  0.5421760    0.27       0.78853    
-## other_installment_plansnone                                0.3873514  0.3076589    1.26       0.20802    
-## people_liable0 to 2                                        0.2243934  0.3184297    0.70       0.48100    
-## personal_status_sexfemale : non-single or male : single    0.6476033  0.4841608    1.34       0.18103    
-## personal_status_sexmale : married/widowed                  1.2036056  0.4825452    2.49       0.01262 *  
-## personal_status_sexfemale : single                         0.8236179  0.5723584    1.44       0.15015    
-## present_residence.L                                       -0.3689853  0.2591897   -1.42       0.15456    
-## present_residence.Q                                        0.4979749  0.2443400    2.04       0.04155 *  
-## present_residence.C                                       -0.4572063  0.2462208   -1.86       0.06333 .  
-## propertycar or other                                       0.1243518  0.3035536    0.41       0.68206    
-## propertybuilding soc. savings agr./life insurance          0.1431829  0.2890722    0.50       0.62038    
-## propertyreal estate                                       -0.2818391  0.5614943   -0.50       0.61571    
-## purposecar (new)                                           1.7742108  0.4792662    3.70       0.00021 ***
-## purposecar (used)                                          0.5974458  0.3226859    1.85       0.06410 .  
-## purposefurniture/equipment                                 0.8264266  0.3090514    2.67       0.00749 ** 
-## purposeradio/television                                   -0.0966842  0.8379264   -0.12       0.90814    
-## purposedomestic appliances                                 0.6065465  0.6489251    0.93       0.34995    
-## purposerepairs                                            -0.2952984  0.4569916   -0.65       0.51816    
-## purposevacation                                            1.5922005  1.2724107    1.25       0.21082    
-## purposeretraining                                          0.6449501  0.4038272    1.60       0.11024    
-## purposebusiness                                            1.3395180  0.8364197    1.60       0.10927    
-## savings... <  100 DM                                       0.2723288  0.3449416    0.79       0.42982    
-## savings100 <= ... <  500 DM                                1.5113771  0.6116665    2.47       0.01348 *  
-## savings500 <= ... < 1000 DM                                1.7150396  0.7436286    2.31       0.02109 *  
-## savings... >= 1000 DM                                      1.1948701  0.3255107    3.67       0.00024 ***
-## status... < 0 DM                                           0.3827372  0.2642217    1.45       0.14746    
-## status0<= ... < 200 DM                                     0.9450702  0.4253749    2.22       0.02630 *  
-## status... >= 200 DM / salary for at least 1 year           1.8125582  0.2865752    6.32 0.00000000025 ***
-## telephoneyes (under customer name)                         0.0047730  0.2427233    0.02       0.98431    
+##                                                              Estimate  Std. Error z value       Pr(>|z|)    
+## (Intercept)                                                -3.1543532   1.3701908   -2.30        0.02133 *  
+## age                                                         0.0144578   0.0118059    1.22        0.22072    
+## amount                                                     -0.0001367   0.0000577   -2.37        0.01784 *  
+## credit_historycritical account/other credits elsewhere      0.3696507   0.7352414    0.50        0.61513    
+## credit_historyno credits taken/all credits paid back duly   1.2150620   0.5739264    2.12        0.03425 *  
+## credit_historyexisting credits paid back duly till now      0.9700566   0.6264085    1.55        0.12148    
+## credit_historyall credits at this bank paid back duly       1.9434478   0.5820557    3.34        0.00084 ***
+## duration                                                   -0.0295915   0.0122968   -2.41        0.01611 *  
+## employment_duration< 1 yr                                  -0.3372155   0.5427375   -0.62        0.53439    
+## employment_duration1 <= ... < 4 yrs                        -0.0218998   0.5238527   -0.04        0.96665    
+## employment_duration4 <= ... < 7 yrs                         0.4897266   0.5609702    0.87        0.38266    
+## employment_duration>= 7 yrs                                 0.1104749   0.5437570    0.20        0.83900    
+## foreign_workeryes                                           1.7140875   0.7698682    2.23        0.02598 *  
+## housingrent                                                 0.5610512   0.2923332    1.92        0.05496 .  
+## housingown                                                  0.7080619   0.6038881    1.17        0.24099    
+## installment_rate.L                                         -0.8074326   0.2728663   -2.96        0.00309 ** 
+## installment_rate.Q                                          0.0594248   0.2479357    0.24        0.81058    
+## installment_rate.C                                         -0.0351134   0.2540488   -0.14        0.89007    
+## jobunskilled - resident                                    -0.3768399   0.9394487   -0.40        0.68833    
+## jobskilled employee/official                               -0.3329590   0.9131823   -0.36        0.71540    
+## jobmanager/self-empl/highly qualif. employee                0.1366757   0.9209889    0.15        0.88203    
+## number_credits.L                                            0.1877171   1.0070714    0.19        0.85213    
+## number_credits.Q                                            0.3365599   0.8389922    0.40        0.68831    
+## number_credits.C                                           -0.3752939   0.5937729   -0.63        0.52735    
+## other_debtorsco-applicant                                  -0.3244795   0.4943771   -0.66        0.51161    
+## other_debtorsguarantor                                      1.2699170   0.5751648    2.21        0.02725 *  
+## other_installment_plansstores                               0.7719189   0.5507474    1.40        0.16104    
+## other_installment_plansnone                                 0.9052032   0.3082859    2.94        0.00332 ** 
+## people_liable3 or more                                     -0.3713109   0.3276947   -1.13        0.25717    
+## personal_status_sexfemale : non-single or male : single     1.0714349   0.5242157    2.04        0.04097 *  
+## personal_status_sexmale : married/widowed                   1.5086800   0.5164705    2.92        0.00349 ** 
+## personal_status_sexfemale : single                          0.8203908   0.6011491    1.36        0.17235    
+## present_residence.L                                        -0.1005453   0.2661614   -0.38        0.70561    
+## present_residence.Q                                         0.5619816   0.2521788    2.23        0.02585 *  
+## present_residence.C                                        -0.5056580   0.2615088   -1.93        0.05316 .  
+## propertycar or other                                       -0.4732924   0.3183653   -1.49        0.13711    
+## propertybuilding soc. savings agr. / life insurance        -0.0186494   0.2964523   -0.06        0.94984    
+## propertyreal estate                                        -0.7649722   0.5501163   -1.39        0.16436    
+## purposecar (new)                                            1.4977168   0.4521313    3.31        0.00092 ***
+## purposecar (used)                                           0.4228846   0.3261269    1.30        0.19474    
+## purposefurniture/equipment                                  0.7755526   0.3224826    2.40        0.01617 *  
+## purposeradio/television                                    -0.2887552   0.9525555   -0.30        0.76179    
+## purposedomestic appliances                                 -0.5714243   0.6578263   -0.87        0.38504    
+## purposerepairs                                             -0.1004203   0.5291260   -0.19        0.84948    
+## purposevacation                                            15.2660806 543.5461693    0.03        0.97759    
+## purposeretraining                                           1.0739961   0.4348230    2.47        0.01351 *  
+## purposebusiness                                             3.2625392   1.4748082    2.21        0.02695 *  
+## savings... < 100 DM                                         0.3224494   0.3700117    0.87        0.38350    
+## savings100 <= ... < 500 DM                                  0.1003430   0.4800239    0.21        0.83442    
+## savings500 <= ... < 1000 DM                                 1.6775820   0.6328090    2.65        0.00803 ** 
+## savings... >= 1000 DM                                       0.8220917   0.3243537    2.53        0.01126 *  
+## status... < 0 DM                                            0.4836803   0.2758264    1.75        0.07950 .  
+## status0<= ... < 200 DM                                      1.1400132   0.4682444    2.43        0.01491 *  
+## status... >= 200 DM / salary for at least 1 year            1.9430728   0.2993987    6.49 0.000000000086 ***
+## telephoneyes (under customer name)                          0.1103368   0.2496382    0.44        0.65850    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 868.33  on 699  degrees of freedom
-## Residual deviance: 622.78  on 645  degrees of freedom
-## AIC: 732.8
+##     Null deviance: 825.22  on 669  degrees of freedom
+## Residual deviance: 576.59  on 615  degrees of freedom
+## AIC: 686.6
 ## 
-## Number of Fisher Scoring iterations: 5
+## Number of Fisher Scoring iterations: 14
 ```
 
 According to the summary, e.g., `credit_history` and `status` significantly influence the creditworthiness and the bank's risk assessment.
@@ -888,16 +931,13 @@ The positive sign of the coefficient of `status >= 200 DM / salary for at least 
 <summary>
 <strong>Hint 1</strong>
 </summary>
-<p>Since we have a new tabular dataset as an input (and not a task), we
-need to use <code>$predict_newdata()</code> (instead of
-<code>$predict()</code>) to derive a <code>PredictionClassif</code>
-object.</p>
+<p>Use <code>$predict()</code> with <code>row_ids</code>.</p>
 </details>
 <details>
 <summary>
 <strong>Hint 2</strong>
 </summary>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>pred <span class="ot">=</span> yourmodel<span class="sc">$</span><span class="fu">predict_newdata</span>(...)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>pred <span class="ot">=</span> yourmodel<span class="sc">$</span><span class="fu">predict</span>(..., <span class="at">row_ids =</span> ...)</span></code></pre></div>
 </details>
 <!--
 
@@ -907,7 +947,7 @@ object.</p>
 
 
 ``` r
-pred_logreg = logreg$predict_newdata(test_set)
+pred_logreg = logreg$predict(task, row_ids = splits$test)
 ```
 
 
@@ -944,7 +984,7 @@ of our model.
 ``` r
 pred_logreg$score()
 ## classif.ce 
-##    0.22667
+##    0.24848
 ```
 
 The classification error is 0.255 - so 25.5 \% of the test instances were
@@ -985,12 +1025,12 @@ function call when constructing a learner.</p>
 logreg = lrn("classif.log_reg", predict_type = "prob")
 logreg$train(task)
 # Generate predictions
-pred_logreg = logreg$predict_newdata(test_set)
+pred_logreg = logreg$predict(task, row_ids = splits$test)
 # Evaluate performance using brier score
 measure = msr("classif.bbrier")
 pred_logreg$score(measure)
 ## classif.bbrier 
-##        0.16441
+##        0.14075
 ```
 
 
