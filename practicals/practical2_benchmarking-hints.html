@@ -31,8 +31,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -191,6 +192,8 @@ the learners</a></li>
 <li><a href="#create-the-resampling" id="toc-create-the-resampling">Create the resampling</a></li>
 <li><a href="#create-a-benchmarking-design" id="toc-create-a-benchmarking-design">Create a benchmarking
 design</a></li>
+<li><a href="#run-the-benchmark" id="toc-run-the-benchmark">Run the
+benchmark</a></li>
 <li><a href="#evaluate-the-benchmark" id="toc-evaluate-the-benchmark">Evaluate the benchmark</a></li>
 <li><a href="#interpret-the-results" id="toc-interpret-the-results">Interpret the results</a></li>
 </ul></li>
@@ -253,7 +256,7 @@ To create a list of KNN learners, you can use this template:
 
 ### Solution
 <details>
-  <summary>Click me:</summary>
+<summary>Click me:</summary>
 
 
 ``` r
@@ -308,7 +311,7 @@ the <code>benchmark_grid</code> function requires lists as input.
 <summary>
 <strong>Show Hint 2:</strong>
 </summary>
-<code>benchmark_grid(...</code>
+<code>benchmark_grid(...)</code>
 </details>
 <!--
 
@@ -321,18 +324,21 @@ the <code>benchmark_grid</code> function requires lists as input.
 design = benchmark_grid(list(task), lrns, cv4)
 ```
 
-## Run the benchmark
-
-Now you still need to run all experiments specified in the design.
-Do so by using the `benchmark` function.
-This may take some time.
-(Still less than a minute.)
-Make sure to store the benchmark in a new object called `bmr` as you will reuse and inspect the benchmark result in the subsequent exercises.
-
+-->
+</div>
+<div id="run-the-benchmark" class="section level2">
+<h2>Run the benchmark</h2>
+<p>Now you still need to run all experiments specified in the design. Do
+so by using the <code>benchmark</code> function. This may take some
+time. (Still less than a minute.) Make sure to store the benchmark in a
+new object called <code>bmr</code> as you will reuse and inspect the
+benchmark result in the subsequent exercises.</p>
 <details>
-  <summary>**Show Hint 1:**</summary>
-  </details>
-
+<summary>
+<strong>Show Hint 1:</strong>
+</summary>
+<p><code>bmr = benchmark(...)</code></p>
+</details>
 <!--
 
 ### Solution
@@ -388,8 +394,8 @@ head(res)
 autoplot(bmr, measure = msr("classif.acc"))
 ```
 
-![](day1_benchmarking-hints_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
-<p>–&gt;</p>
+![](day1_benchmarking-hints_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+<!-- <p>–&gt;</p> -->
 </div>
 <div id="interpret-the-results" class="section level2">
 <h2>Interpret the results</h2>
