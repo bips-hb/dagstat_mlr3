@@ -12,8 +12,8 @@ Bernd Bischl, Marvin N. Wright
 ### Morning Session 2
 * Theory: Resampling and Benchmarking [Slides (pdf)](https://bips-hb.github.io/dagstat_mlr3/slides/theory_2.pdf)
 * Hands-On Intro: Introduction to mlr3 (cont.) [Slides (html)](https://bips-hb.github.io/dagstat_mlr3/slides/mlr3_intro.html#/evaluation-and-benchmarking)
-* Hands-On Practical 1: Resampling [Exercise (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical2_resampling-hints.html)
-* Hands-On Practical 2: Benchmarking [Exercise (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical2_benchmarking-hints.html)
+* Hands-On Practical 1: Resampling [Exercise (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical2_resampling-hints.html) [Solution (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical2_resampling-solution.html)
+* Hands-On Practical 2: Benchmarking [Exercise (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical2_benchmarking-hints.html) [Solution (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical2_benchmarking-solution.html)
 
 ### Afternoon Session 1
 * Theory: Tuning and Nested Resampling [Slides (pdf)](https://bips-hb.github.io/dagstat_mlr3/slides/theory_3.pdf)
