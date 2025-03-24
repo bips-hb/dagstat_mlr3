@@ -7,7 +7,7 @@ Bernd Bischl, Marvin N. Wright
 ### Morning Session 1
 * Theory: Machine Learning Basics [Slides (pdf)](https://bips-hb.github.io/dagstat_mlr3/slides/theory_1.pdf)
 * Hands-On Intro: Introduction to mlr3 [Slides (html)](https://bips-hb.github.io/dagstat_mlr3/slides/mlr3_intro.html)
-* Hands-On Practical: Train/Predict/Evaluate [Exercise (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical1_train_predict_evaluate-hints.html)
+* Hands-On Practical: Train/Predict/Evaluate [Exercise (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical1_train_predict_evaluate-hints.html) [Solution (html)](https://bips-hb.github.io/dagstat_mlr3/practicals/practical1_train_predict_evaluate-solution.html)
 
 ### Morning Session 2
 * Theory: Resampling and Benchmarking [Slides (pdf)](https://bips-hb.github.io/dagstat_mlr3/slides/theory_2.pdf)
